@@ -1,6 +1,7 @@
 package com.easyfitness.views;
 
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
@@ -17,7 +18,6 @@ import androidx.appcompat.widget.AppCompatSpinner;
 import com.easyfitness.R;
 import com.easyfitness.utils.DateConverter;
 import com.easyfitness.utils.Keyboard;
-import com.ikovac.timepickerwithseconds.MyTimePickerDialog;
 
 import java.util.Calendar;
 
@@ -56,7 +56,6 @@ public class SingleValueInputView extends LinearLayout {
     }
 
     protected void init(Context context, AttributeSet attrs) {
-
         rootView = inflate(context, R.layout.singlevalueinput_view, this);
         titleTextView = rootView.findViewById(R.id.singlevalueinput_title);
         valueEditText = rootView.findViewById(R.id.singlevalueinput_value);
@@ -223,21 +222,22 @@ public class SingleValueInputView extends LinearLayout {
                     seconds = 0;
                 }
 
-                MyTimePickerDialog mTimePicker = new MyTimePickerDialog(this.getContext(), (timePicker, selectedHour, selectedMinute, selectedSeconds) -> {
-                    String strMinute = "00";
-                    String strHour = "00";
-                    String strSecond = "00";
+                int finalSeconds = seconds;
+                TimePickerDialog mTimePicker = new TimePickerDialog(this.getContext(),
+                        (timePicker, selectedHour, selectedMinute) -> {
+                            String strMinute = "00";
+                            String strHour = "00";
+                            String strSecond = "00";
 
-                    if (selectedHour < 10) strHour = "0" + selectedHour;
-                    else strHour = Integer.toString(selectedHour);
-                    if (selectedMinute < 10) strMinute = "0" + selectedMinute;
-                    else strMinute = Integer.toString(selectedMinute);
-                    if (selectedSeconds < 10) strSecond = "0" + selectedSeconds;
-                    else strSecond = Integer.toString(selectedSeconds);
+                            if (selectedHour < 10) strHour = "0" + selectedHour;
+                            else strHour = Integer.toString(selectedHour);
+                            if (selectedMinute < 10) strMinute = "0" + selectedMinute;
+                            else strMinute = Integer.toString(selectedMinute);
+                            if (finalSeconds < 10) strSecond = "0" + finalSeconds;
+                            else strSecond = Integer.toString(finalSeconds);
 
-                    valueEditText.setText(strHour + ":" + strMinute + ":" + strSecond);
-                }, hour, minute, seconds, true);//Yes 24 hour time
-
+                            valueEditText.setText(strHour + ":" + strMinute + ":" + strSecond);
+                        }, hour, minute, true); // 24-hour format
 
                 mTimePicker.setOnDismissListener(dialog -> mIsTimePickerShown = false);
                 mTimePicker.setTitle("Select Time");

@@ -2,24 +2,22 @@ package com.easyfitness;
 
 import android.app.Dialog;
 import android.os.Bundle;
-
 import androidx.fragment.app.DialogFragment;
+import android.widget.TimePicker;
+import android.app.TimePickerDialog;
 
-import com.ikovac.timepickerwithseconds.MyTimePickerDialog;
-
-//@SuppressLint("ValidFragment")
 public class TimePickerDialogFragment extends DialogFragment {
 
     private final int Hours = 0;
     private final int Minutes = 0;
-    private final int Seconds = 0;
-    private MyTimePickerDialog.OnTimeSetListener onTimeSetListener;
+    private final int Seconds = 0;  // You may ignore seconds if not needed
+    private TimePickerDialog.OnTimeSetListener onTimeSetListener;
 
-    static public TimePickerDialogFragment newInstance(MyTimePickerDialog.OnTimeSetListener onTimeSetListener, int hour, int min, int sec) {
+    static public TimePickerDialogFragment newInstance(TimePickerDialog.OnTimeSetListener onTimeSetListener, int hour, int min, int sec) {
         TimePickerDialogFragment pickerFragment = new TimePickerDialogFragment();
         pickerFragment.setOnTimeSetListener(onTimeSetListener);
 
-        //Pass the date in a bundle.
+        // Pass the date in a bundle
         Bundle bundle = new Bundle();
         bundle.putInt("HOUR", hour);
         bundle.putInt("MINUTE", min);
@@ -28,17 +26,23 @@ public class TimePickerDialogFragment extends DialogFragment {
         return pickerFragment;
     }
 
+    @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Bundle bundle = getArguments();
         int hour = bundle.getInt("HOUR");
         int min = bundle.getInt("MINUTE");
-        int sec = bundle.getInt("SECOND");
 
-        // Create a new instance of TimePickerDialog and return it
-        return new MyTimePickerDialog(getActivity(), onTimeSetListener, hour, min, sec, true);
+        // Create and return the native TimePickerDialog
+        return new TimePickerDialog(
+                getActivity(),
+                onTimeSetListener,
+                hour,  // Initial hour
+                min,   // Initial minute
+                true    // 24-hour format (set false for 12-hour format)
+        );
     }
 
-    private void setOnTimeSetListener(MyTimePickerDialog.OnTimeSetListener listener) {
+    private void setOnTimeSetListener(TimePickerDialog.OnTimeSetListener listener) {
         this.onTimeSetListener = listener;
     }
 }

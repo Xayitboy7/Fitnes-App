@@ -2,6 +2,7 @@ package com.easyfitness.fonte;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -67,7 +68,8 @@ import com.easyfitness.utils.ImageUtil;
 import com.easyfitness.utils.Keyboard;
 import com.easyfitness.utils.UnitConverter;
 import com.easyfitness.views.WorkoutValuesInputView;
-import com.ikovac.timepickerwithseconds.MyTimePickerDialog;
+//import com.ikovac.timepickerwithseconds.MyTimePickerDialog;
+
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.onurkaganaldemir.ktoastlib.KToast;
 
@@ -102,12 +104,15 @@ public class FontesFragment extends Fragment {
         Keyboard.hide(getContext(), dateEdit);
     };
     private TextView timeEdit = null;
-    private final MyTimePickerDialog.OnTimeSetListener timeSet = (view, hourOfDay, minute, second) -> {
-        // Do something with the time chosen by the user
-        Date date = DateConverter.timeToDate(hourOfDay, minute, second);
-        timeEdit.setText(DateConverter.dateToLocalTimeStr(date, getContext()));
+    private final TimePickerDialog.OnTimeSetListener timeSet = (view, hourOfDay, minute) -> {
+        // Convert the selected time to a Date object
+        Date date = DateConverter.timeToDate(hourOfDay, minute, 0);  // Set seconds to 0 as it's not used
+        timeEdit.setText(DateConverter.dateToLocalTimeStr(date, getContext()));  // Update timeEdit with formatted time
+
+        // Hide the keyboard (if it's shown)
         Keyboard.hide(getContext(), timeEdit);
     };
+
     private final CompoundButton.OnCheckedChangeListener checkedAutoTimeCheckBox = (buttonView, isChecked) -> {
         dateEdit.setEnabled(!isChecked);
         timeEdit.setEnabled(!isChecked);
